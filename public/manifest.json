@@ -1,0 +1,16 @@
+{
+  "name": "Danik Studios",
+  "short_name": "Danik Studios",
+  "description": "Immersive Horror & Realistic Interactive Experiences",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00f0ff",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
