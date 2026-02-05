@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useMemo, useCallback } from 'react'
+import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
@@ -11,15 +11,15 @@ import * as THREE from 'three'
 // ============================================
 
 // Throttle helper for mouse events
-function throttle<T extends (...args: unknown[]) => void>(func: T, limit: number): T {
+function throttle<Args extends unknown[]>(func: (...args: Args) => void, limit: number): (...args: Args) => void {
   let inThrottle: boolean
-  return ((...args: unknown[]) => {
+  return (...args: Args) => {
     if (!inThrottle) {
       func(...args)
       inThrottle = true
       setTimeout(() => (inThrottle = false), limit)
     }
-  }) as T
+  }
 }
 
 function Particles({ count = 1500, mouse }: { count?: number; mouse: React.MutableRefObject<{ x: number; y: number }> }) {
@@ -87,14 +87,15 @@ export default function ParticleField({ className = '' }: ParticleFieldProps) {
   const mouseRef = useRef({ x: 0, y: 0 })
 
   // Throttled mouse handler (60ms throttle)
-  const handleMouseMove = useCallback(
-    throttle((e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect()
-      mouseRef.current = {
-        x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
-        y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
-      }
-    }, 60),
+  const handleMouseMove = useMemo(
+    () =>
+      throttle((e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        mouseRef.current = {
+          x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
+          y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
+        }
+      }, 60),
     []
   )
 

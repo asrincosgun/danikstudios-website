@@ -51,6 +51,33 @@ export default function FeaturedGame() {
   // Calculate which milestone should be active based on scroll
   const currentMilestone = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [0, 1, 2, 3, 3])
 
+  // Pre-compute transforms for progress indicator dots
+  const dotColor0 = useTransform(currentMilestone, [-0.5, 0, 0.5], ['rgba(255,255,255,0.2)', '#00f0ff', 'rgba(255,255,255,0.2)'])
+  const dotColor1 = useTransform(currentMilestone, [0.5, 1, 1.5], ['rgba(255,255,255,0.2)', '#00f0ff', 'rgba(255,255,255,0.2)'])
+  const dotColor2 = useTransform(currentMilestone, [1.5, 2, 2.5], ['rgba(255,255,255,0.2)', '#00f0ff', 'rgba(255,255,255,0.2)'])
+  const dotColor3 = useTransform(currentMilestone, [2.5, 3, 3.5], ['rgba(255,255,255,0.2)', '#00f0ff', 'rgba(255,255,255,0.2)'])
+  const dotColors = [dotColor0, dotColor1, dotColor2, dotColor3]
+
+  // Pre-compute transforms for milestone content opacity
+  const milestoneOpacity0 = useTransform(scrollYProgress, [-0.1, 0, 0.15, 0.25], [0, 1, 1, 0])
+  const milestoneOpacity1 = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], [0, 1, 1, 0])
+  const milestoneOpacity2 = useTransform(scrollYProgress, [0.4, 0.5, 0.65, 0.75], [0, 1, 1, 0])
+  const milestoneOpacity3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], [0, 1, 1, 0])
+  const milestoneOpacities = [milestoneOpacity0, milestoneOpacity1, milestoneOpacity2, milestoneOpacity3]
+
+  // Pre-compute transforms for milestone content y position
+  const milestoneY0 = useTransform(scrollYProgress, [-0.1, 0, 0.15, 0.25], [50, 0, 0, -50])
+  const milestoneY1 = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], [50, 0, 0, -50])
+  const milestoneY2 = useTransform(scrollYProgress, [0.4, 0.5, 0.65, 0.75], [50, 0, 0, -50])
+  const milestoneY3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], [50, 0, 0, -50])
+  const milestoneYs = [milestoneY0, milestoneY1, milestoneY2, milestoneY3]
+
+  // Pre-compute transform for feature highlights opacity
+  const featureHighlightsOpacity = useTransform(scrollYProgress, [0.7, 0.85, 1], [0, 1, 1])
+
+  // Pre-compute transform for scroll hint opacity
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
+
   return (
     <section
       ref={sectionRef}
@@ -84,11 +111,7 @@ export default function FeaturedGame() {
                 <motion.div
                   className="w-2 h-2 rounded-full bg-white/20"
                   style={{
-                    backgroundColor: useTransform(
-                      currentMilestone,
-                      [index - 0.5, index, index + 0.5],
-                      ['rgba(255,255,255,0.2)', '#00f0ff', 'rgba(255,255,255,0.2)']
-                    ),
+                    backgroundColor: dotColors[index],
                   }}
                 />
                 {index < milestones.length - 1 && (
@@ -105,26 +128,8 @@ export default function FeaturedGame() {
                 key={index}
                 className="absolute"
                 style={{
-                  opacity: useTransform(
-                    scrollYProgress,
-                    [
-                      index * 0.25 - 0.1,
-                      index * 0.25,
-                      index * 0.25 + 0.15,
-                      index * 0.25 + 0.25,
-                    ],
-                    [0, 1, 1, 0]
-                  ),
-                  y: useTransform(
-                    scrollYProgress,
-                    [
-                      index * 0.25 - 0.1,
-                      index * 0.25,
-                      index * 0.25 + 0.15,
-                      index * 0.25 + 0.25,
-                    ],
-                    [50, 0, 0, -50]
-                  ),
+                  opacity: milestoneOpacities[index],
+                  y: milestoneYs[index],
                 }}
               >
                 {/* Eyebrow */}
@@ -178,7 +183,7 @@ export default function FeaturedGame() {
           <motion.div
             className="absolute bottom-12 left-0 right-0 container-wide"
             style={{
-              opacity: useTransform(scrollYProgress, [0.7, 0.85, 1], [0, 1, 1]),
+              opacity: featureHighlightsOpacity,
             }}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -211,7 +216,7 @@ export default function FeaturedGame() {
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           style={{
-            opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]),
+            opacity: scrollHintOpacity,
           }}
         >
           <div className="flex flex-col items-center gap-2 text-text-muted">

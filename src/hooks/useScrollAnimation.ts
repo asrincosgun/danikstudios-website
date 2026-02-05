@@ -8,8 +8,10 @@ import { useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
 // Reusable hooks for scroll-driven animations
 // ============================================
 
+type ScrollOffset = ['start end' | 'end start' | 'start start' | 'end end' | 'center center', 'start end' | 'end start' | 'start start' | 'end end' | 'center center']
+
 interface ScrollAnimationOptions {
-  offset?: [string, string]
+  offset?: ScrollOffset
   springConfig?: {
     stiffness?: number
     damping?: number
